@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "module":"commonjs",
+        "strict": true,
+        "sourceMap": true,
+        "jsx": "react",
+        "lib":["ES2020","DOM"],
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "baseUrl": ".",
+        "paths":{
+            "@components/*":["src/components/*"],
+            "@layouts/*":["src/layouts/*"],
+            "@hooks/*":["src/hooks/*"],
+            "@pages/*":["src/pages/*"],
+            "@typings/*":["src/typings/*"],
+        },
+        "skipLibCheck": true,                          /* Skip type checking of declaration files. */
+        "forceConsistentCasingInFileNames": true 
+    },
+}
