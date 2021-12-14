@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module":"commonjs",
+        "strict": true,
+        "sourceMap": true,
+        "jsx": "react",
+        "lib":["ES2020","DOM"],
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "baseUrl": ".",
+        "skipLibCheck": true,                          /* Skip type checking of declaration files. */
+        "forceConsistentCasingInFileNames": true 
+    },
+}
