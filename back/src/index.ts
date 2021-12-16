@@ -18,14 +18,14 @@ app.use(loggerMiddleware);
 app.use(express.json());
 
 const mongoURI: string = process.env.MONGO_URI!;
-
+const secret: string = process.env.COOKIE_SECRET!;
 mongoose.connect(mongoURI);
 
 const db = mongoose.connection;
 
 app.use(
   session({
-    secret: "Hello!",
+    secret, // 쿠키에 sign 할때
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: mongoURI }),

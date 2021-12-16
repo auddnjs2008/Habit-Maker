@@ -7,11 +7,11 @@ export const handleUserInfo = (req: express.Request, res: express.Response) => {
 };
 
 export const postJoin = async (req: express.Request, res: express.Response) => {
-  const { username, email, password, password2, name, profileImage } = req.body;
-
+  const { username, email, password, passwordConfirm, name, profileImage } =
+    req.body;
   const exists = await User.exists({ $or: [{ username }, { email }] });
 
-  if (password !== password2) {
+  if (password !== passwordConfirm) {
     return res
       .status(404)
       .send("errorMessage: password Confirmation does not match");
@@ -58,9 +58,17 @@ export const postLogin = async (
   }
   (req.session as any).loggedIn = true;
   (req.session as any).user = user;
-  return res.send("succeess");
+  return res.send(`${user}`);
 };
 
 // 세션 => 백엔드와 브라우저 간에 어떤활동을 했는지 기억하는것
 // 즉 memory, history 같은 것이다.
 // 이게 작동할ㄹ면 백엔드와 브라우저가 서로 정보를 가지고 있어야 한다.
+
+export const getSession = (req: express.Request, res: express.Response) => {
+  if ((req.session as any).loggedIn) {
+    return res.send((req.session as any).user);
+  } else {
+    return res.status(404).send("errorMessage: You should login");
+  }
+};

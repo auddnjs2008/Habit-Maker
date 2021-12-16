@@ -8,7 +8,6 @@
     "start": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack serve --env development",
     "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" NODE_ENV=production webpack"
   },
-  
   "author": "명원",
   "license": "ISC",
   "dependencies": {
@@ -28,6 +27,7 @@
     "axios": "^0.24.0",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.1",
+    "emotion-reset": "^3.0.1",
     "fork-ts-checker-webpack-plugin": "^6.5.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -48,5 +48,4 @@
     "prettier": "^2.5.1",
     "typescript": "^4.5.3"
   }
-  
 }
