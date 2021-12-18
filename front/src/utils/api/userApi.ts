@@ -44,10 +44,19 @@ export const getUserInfo = async () => {
 export const getKaKaoUser = (code: string) => {
   axios
     .post('/api/users/kakao/finish', { code })
-    .then((result) => {
+    .then((result: any) => {
       console.log(result);
+      const token = (result.data.tokenInfo as any).access_token;
+      localStorage.setItem('testToken', JSON.stringify(token));
+      console.log(localStorage.getItem('testToken'));
     })
     .catch((e) => {
       console.log(e);
     });
+};
+
+export const kakaoLogout = (tokenKey: string) => {
+  axios.post('/api/users/kakao/logout', { tokenKey }).then((result) => {
+    console.log(result);
+  });
 };

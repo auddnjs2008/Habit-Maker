@@ -2,12 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Container, Header, LinkContainer, Wrapper } from './styles';
 import { Link, useNavigate } from 'react-router-dom';
 import useInput from '@hooks/useInput';
-import { loginApi } from '@utils/api/userApi';
+import { kakaoLogout, loginApi } from '@utils/api/userApi';
 
 const Login = () => {
   const [id, setId, onIdChange] = useInput('');
   const [password, setPassword, onPasswordChange] = useInput('');
   const navigate = useNavigate();
+
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();

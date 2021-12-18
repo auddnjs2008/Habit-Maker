@@ -97,5 +97,33 @@ export const postKakaoToken = async (
     },
   });
   const json = await data.json();
-  console.log(json);
+
+  const userData = await fetch(
+    "https://kapi.kakao.com/v2/user/me?secure_resource=true",
+    {
+      method: "GET",
+      headers: {
+        // "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        Authorization: `Bearer {${json.access_token}}`,
+      },
+    }
+  );
+  const userJson = await userData.json();
+  console.log(userJson);
+  res.send({ tokenInfo: json, userInfo: userJson });
+};
+
+export const kakaoLogout = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const { tokenKey } = req.body;
+
+  await fetch("https://kapi.kakao.com/v1/user/logout", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer {${tokenKey}}`,
+    },
+  });
+  res.end();
 };
