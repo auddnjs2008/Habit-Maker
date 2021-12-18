@@ -1,5 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import fetch from "node-fetch";
 import User from "../model/user";
 
 export const handleUserInfo = (req: express.Request, res: express.Response) => {
@@ -71,4 +72,30 @@ export const getSession = (req: express.Request, res: express.Response) => {
   } else {
     return res.status(404).send("errorMessage: You should login");
   }
+};
+
+export const postKakaoToken = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const { code } = req.body;
+  const baseUrl = "https://kauth.kakao.com/oauth/token";
+
+  const config = {
+    grant_type: "authorization_code",
+    client_id: process.env.KAKAO_CLIENT_ID as string,
+    client_secret: process.env.KAKAO_CLIENT_SECRET as string,
+    code,
+    redirectUri: process.env.KAKAO_REDIRECT_URL as string,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  const data = await fetch(finalUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+  const json = await data.json();
+  console.log(json);
 };

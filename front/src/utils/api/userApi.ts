@@ -40,3 +40,14 @@ export const getUserInfo = async () => {
     return { type: 'ERROR', data: e };
   }
 };
+
+export const getKaKaoUser = (code: string) => {
+  axios
+    .post('/api/users/kakao/finish', { code })
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};

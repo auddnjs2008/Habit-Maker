@@ -12,7 +12,7 @@ export const Container = styled.div`
   border-radius: 10px;
   width: 32rem;
   min-width: 25rem;
-  height: 19.75rem;
+  height: 30rem;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -47,6 +47,15 @@ export const Container = styled.div`
       border: 2px solid black;
     }
   }
+  input[type='submit'] {
+    margin-bottom: 20px;
+  }
+`;
+
+export const Button = styled.button`
+  height: 40px;
+  width: 100%;
+  margin-bottom: 5px;
 `;
 
 export const LinkContainer = styled.div`

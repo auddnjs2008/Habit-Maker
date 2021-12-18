@@ -1,6 +1,8 @@
 import Home from '@pages/Home';
 import Login from '@pages/Login';
+import Kakao from '@pages/Kakao';
 import SignUp from '@pages/SignUp';
+
 import { getUserInfo } from '@utils/api/userApi';
 import React, { useEffect } from 'react';
 
@@ -14,7 +16,7 @@ const App = () => {
       if (result.type === 'SUCCESS') {
         //user 정보  저장 필요
       } else if (result.type === 'ERROR') {
-        navigate('/login');
+        // navigate('/login');
         //
       }
     });
@@ -25,6 +27,7 @@ const App = () => {
       <Route path="/" element={<Home />}></Route>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
+      <Route path="/kakaoOauth" element={<Kakao />}></Route>
     </Routes>
   );
 };

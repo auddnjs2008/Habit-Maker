@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Container, Header, LinkContainer, Wrapper } from './styles';
+import { Button, Container, Header, LinkContainer, Wrapper } from './styles';
 import { Link, useNavigate } from 'react-router-dom';
 import useInput from '@hooks/useInput';
 import { loginApi } from '@utils/api/userApi';
@@ -32,6 +32,12 @@ const Login = () => {
           <input type="text" placeholder="username" value={id} onChange={onIdChange} />
           <input type="password" placeholder="password" value={password} onChange={onPasswordChange} />
           <input type="submit" value="로그인" />
+          <a href={`${process.env.REACT_APP_KAKAO_AUTH_URL}`}>
+            <Button type="button">Kakako Talk 로그인</Button>
+          </a>
+          <a href="">
+            <Button type="button">네이버로 로그인</Button>
+          </a>
         </form>
         <LinkContainer>
           아직 회원이 아니신가요??
