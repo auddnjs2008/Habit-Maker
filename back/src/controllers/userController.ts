@@ -128,6 +128,7 @@ export const postKakaoToken = async (
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      (req.session as any).user = existingUser;
       (req.session as any).loggedIn = true;
       return res.send(existingUser);
     } else {
@@ -139,6 +140,7 @@ export const postKakaoToken = async (
         name: nickname,
         profileImage: profile_image_url,
       });
+      (req.session as any).user = user;
       (req.session as any).loggedIn = true;
       res.send({ user });
     }
@@ -203,6 +205,7 @@ export const postNaverToken = async (
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      (req.session as any).user = existingUser;
       (req.session as any).loggedIn = true;
       return res.send(existingUser);
     } else {
@@ -214,6 +217,7 @@ export const postNaverToken = async (
         name,
         profileImage: profile_image,
       });
+      (req.session as any).user = user;
       (req.session as any).loggedIn = true;
       res.send({ user });
     }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import useSWR from 'swr';
 
 export const loginApi = async (username: string, password: string) => {
   try {
@@ -32,29 +33,22 @@ export const signUpApi = async (
   }
 };
 
-export const getUserInfo = async () => {
-  try {
-    const result = await axios.get('/api/users/session');
-    return { type: 'SUCCESS', data: result.data };
-  } catch (e) {
-    return { type: 'ERROR', data: e };
-  }
+// 세션이 존재하는지 받아온다.
+export const useUserInfo = () => {
+  const fetcher = (url: string) => axios.get(url).then((result) => result.data);
+
+  const { data, error, mutate } = useSWR('/api/users/session', fetcher);
+  return { data, error, mutate };
 };
 
-export const getKaKaoUser = (code: string, navigate: (to: string) => void) => {
-  axios
-    .post('/api/users/kakao/finish', { code })
-    .then((result: any) => {
-      if (result.status === 200 && result.data) {
-        // 유저 저장 해준다.
-
-        //redirect
-        navigate('/');
-      }
-    })
-    .catch((e) => {
-      // 에러 처리
+export const useKaKaoUser = (code: string) => {
+  const fetcher = (url: string) =>
+    axios.post(url, { code }).then((result) => {
+      return result.data;
     });
+
+  const { data, error, mutate } = useSWR('/api/users/kakao/finish', fetcher);
+  return { data, error, mutate };
 };
 
 export const kakaoLogout = (tokenKey: string) => {
@@ -63,16 +57,8 @@ export const kakaoLogout = (tokenKey: string) => {
   });
 };
 
-export const getNaverUser = (code: string, navigate: (to: string) => void) => {
-  axios
-    .post('/api/users/naver/finish', { code })
-    .then((result: any) => {
-      // 유저 정보 저장해준다.
-
-      //redirect
-      navigate('/');
-    })
-    .catch((e) => {
-      // 에러처리
-    });
+export const useNaverUser = (code: string) => {
+  const fetcher = (url: string) => axios.post(url, { code }).then((result) => result.data);
+  const { data, error, mutate } = useSWR('/api/users/naver/finish', fetcher);
+  return { data, error, mutate };
 };

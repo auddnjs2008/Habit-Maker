@@ -2,12 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Container, Header, LinkContainer, Wrapper } from './styles';
 import { Link, useNavigate } from 'react-router-dom';
 import useInput from '@hooks/useInput';
-import { kakaoLogout, loginApi } from '@utils/api/userApi';
+import { kakaoLogout, loginApi, useUserInfo } from '@utils/api/userApi';
 
 const Login = () => {
   const [id, setId, onIdChange] = useInput('');
   const [password, setPassword, onPasswordChange] = useInput('');
   const navigate = useNavigate();
+  const { data, error, mutate } = useUserInfo();
 
   const onSubmit = useCallback(
     (e) => {
@@ -24,6 +25,16 @@ const Login = () => {
     },
     [id, password],
   );
+
+  useEffect(() => {
+    if (data || error) {
+      if (data && !error) {
+        navigate('/');
+      } else if (error) {
+        //에러 처리
+      }
+    }
+  }, [data]);
 
   return (
     <Wrapper>
