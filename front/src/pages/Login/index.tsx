@@ -36,7 +36,7 @@ const Login = () => {
           <a href={`${process.env.REACT_APP_KAKAO_AUTH_URL}`}>
             <Button type="button">Kakako Talk 로그인</Button>
           </a>
-          <a href="">
+          <a href={`${process.env.REACT_APP_NAVER_AUTH_URL}`}>
             <Button type="button">네이버로 로그인</Button>
           </a>
         </form>

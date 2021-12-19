@@ -41,17 +41,19 @@ export const getUserInfo = async () => {
   }
 };
 
-export const getKaKaoUser = (code: string) => {
+export const getKaKaoUser = (code: string, navigate: (to: string) => void) => {
   axios
     .post('/api/users/kakao/finish', { code })
     .then((result: any) => {
-      console.log(result);
-      const token = (result.data.tokenInfo as any).access_token;
-      localStorage.setItem('testToken', JSON.stringify(token));
-      console.log(localStorage.getItem('testToken'));
+      if (result.status === 200 && result.data) {
+        // 유저 저장 해준다.
+
+        //redirect
+        navigate('/');
+      }
     })
     .catch((e) => {
-      console.log(e);
+      // 에러 처리
     });
 };
 
@@ -59,4 +61,18 @@ export const kakaoLogout = (tokenKey: string) => {
   axios.post('/api/users/kakao/logout', { tokenKey }).then((result) => {
     console.log(result);
   });
+};
+
+export const getNaverUser = (code: string, navigate: (to: string) => void) => {
+  axios
+    .post('/api/users/naver/finish', { code })
+    .then((result: any) => {
+      // 유저 정보 저장해준다.
+
+      //redirect
+      navigate('/');
+    })
+    .catch((e) => {
+      // 에러처리
+    });
 };

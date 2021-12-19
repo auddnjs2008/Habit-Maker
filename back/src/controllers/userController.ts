@@ -31,6 +31,7 @@ export const postJoin = async (req: express.Request, res: express.Response) => {
       password,
       name,
       profileImage,
+      socialOnly: false,
     });
   } catch (e) {
     return res.status(404).send(`${e}발생`);
@@ -42,13 +43,16 @@ export const postLogin = async (
   req: express.Request,
   res: express.Response
 ) => {
-  const { username, password } = req.body;
+  const { username, password, socialOnly } = req.body;
 
   const user = await User.findOne({ username });
   if (!user) {
     return res
       .status(400)
       .send("errorMessage: An account with this username does not exist");
+  }
+  if (!socialOnly) {
+    return res.status(400).send("");
   }
 
   //check if password가 맞는지
@@ -90,27 +94,58 @@ export const postKakaoToken = async (
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
-  const data = await fetch(finalUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
-  const json = await data.json();
-
-  const userData = await fetch(
-    "https://kapi.kakao.com/v2/user/me?secure_resource=true",
-    {
-      method: "GET",
+  const tokenData = await (
+    await fetch(finalUrl, {
+      method: "POST",
       headers: {
-        // "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-        Authorization: `Bearer {${json.access_token}}`,
+        "Content-Type": "application/x-www-form-urlencoded",
       },
+    })
+  ).json();
+
+  if ("access_token" in tokenData) {
+    const userData = await (
+      await fetch("https://kapi.kakao.com/v2/user/me?secure_resource=true", {
+        method: "GET",
+        headers: {
+          // "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+          Authorization: `Bearer {${tokenData.access_token}}`,
+        },
+      })
+    ).json();
+    const {
+      kakao_account: {
+        is_email_valid,
+        is_email_verified,
+        email,
+        profile: { nickname, profile_image_url },
+      },
+    } = userData;
+
+    if (!is_email_valid || !is_email_verified || !email) {
+      return res.send("error");
     }
-  );
-  const userJson = await userData.json();
-  console.log(userJson);
-  res.send({ tokenInfo: json, userInfo: userJson });
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      (req.session as any).loggedIn = true;
+      return res.send(existingUser);
+    } else {
+      const user = await User.create({
+        username: nickname,
+        socialOnly: true,
+        email,
+        password: "",
+        name: nickname,
+        profileImage: profile_image_url,
+      });
+      (req.session as any).loggedIn = true;
+      res.send({ user });
+    }
+  } else {
+    //에러 처리를 해 준다.
+    res.status(400).send("");
+  }
 };
 
 export const kakaoLogout = async (
@@ -126,4 +161,63 @@ export const kakaoLogout = async (
     },
   });
   res.end();
+};
+
+export const postNaverToken = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const { code } = req.body;
+  const baseUrl = "https://nid.naver.com/oauth2.0/token";
+  const config = {
+    grant_type: "authorization_code",
+    client_id: process.env.NAVER_CLIENT_ID as string,
+    client_secret: process.env.NAVER_CLIENT_SECRET as string,
+    code,
+    state: "5678",
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+
+  const tokenInfo = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        "X-Naver-Client-Id": process.env.NAVER_CLIENT_ID as string,
+        "X-Naver-Client-Secret": process.env.NAVER_CLIENT_SECRET as string,
+      },
+    })
+  ).json();
+  if (tokenInfo) {
+    const userInfo = await (
+      await fetch("https://openapi.naver.com/v1/nid/me", {
+        headers: {
+          Authorization: `Bearer ${tokenInfo.access_token}`,
+        },
+      })
+    ).json();
+
+    const {
+      response: { email, name, nickname, profile_image },
+    } = userInfo;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      (req.session as any).loggedIn = true;
+      return res.send(existingUser);
+    } else {
+      const user = await User.create({
+        username: nickname,
+        socialOnly: true,
+        email,
+        password: "",
+        name,
+        profileImage: profile_image,
+      });
+      (req.session as any).loggedIn = true;
+      res.send({ user });
+    }
+  } else {
+    res.status(400).send("error");
+  }
 };
