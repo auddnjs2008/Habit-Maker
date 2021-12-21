@@ -74,7 +74,7 @@ export const getSession = (req: express.Request, res: express.Response) => {
   if ((req.session as any).loggedIn) {
     return res.send((req.session as any).user);
   } else {
-    return res.status(404).send("errorMessage: You should login");
+    return res.status(404).send("");
   }
 };
 
@@ -224,4 +224,9 @@ export const postNaverToken = async (
   } else {
     res.status(400).send("error");
   }
+};
+
+export const logOut = (req: express.Request, res: express.Response) => {
+  (req.session as any).destroy();
+  res.send("");
 };

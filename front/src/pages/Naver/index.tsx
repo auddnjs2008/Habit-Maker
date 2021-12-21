@@ -9,13 +9,14 @@ const Naver = () => {
   const { data, error, mutate } = useNaverUser(code);
 
   useEffect(() => {
-    if (data || error) {
-      if (data && !error) {
-        navigate('/');
-      } else if (error) {
-        navigate('/login');
-      }
-    }
+    // if (data || error) {
+    //   if (data && !error) {
+    //     navigate('/');
+    //   } else if (error) {
+    //     navigate('/login');
+    //   }
+    // }
+    console.log(data);
   }, [data]);
 
   return <div>네이버 리다이렉트 중</div>;

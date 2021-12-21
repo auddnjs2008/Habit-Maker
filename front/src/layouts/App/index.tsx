@@ -4,34 +4,30 @@ import Kakao from '@pages/Kakao';
 import SignUp from '@pages/SignUp';
 import Naver from '@pages/Naver';
 
-import { useUserInfo } from '@utils/api/userApi';
-import React, { useEffect } from 'react';
-
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import SWRDevtools from '@jjordy/swr-devtools';
+import Navigator from '@components/Navigator';
+
+import { useUserInfo } from '@utils/api/userApi';
+import Setting from '@pages/Setting';
 
 const App = () => {
-  const navigate = useNavigate();
-  const { data, error, mutate } = useUserInfo();
-
-  useEffect(() => {
-    if (data || error) {
-      if (!data || error !== undefined) {
-        navigate('/login');
-      }
-    }
-  }, [data]);
+  const { data: user, error, mutate } = useUserInfo();
 
   return (
     <SWRDevtools>
-      <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/signup" element={<SignUp />}></Route>
-        <Route path="/kakaoOauth" element={<Kakao />}></Route>
-        <Route path="/naverOauth" element={<Naver />}></Route>
-      </Routes>
+      <>
+        <Navigator user={user}></Navigator>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/signup" element={<SignUp />}></Route>
+          <Route path="/setting" element={<Setting />}></Route>
+          <Route path="/kakaoOauth" element={<Kakao mutate={mutate} />}></Route>
+          <Route path="/naverOauth" element={<Naver />}></Route>
+        </Routes>
+      </>
     </SWRDevtools>
   );
 };

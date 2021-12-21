@@ -1,19 +1,18 @@
 import { useKaKaoUser } from '@utils/api/userApi';
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { KeyedMutator } from 'swr';
 
-const Kakao = () => {
+const Kakao: FC<{ mutate: KeyedMutator<any> }> = ({ mutate }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const code = location.search.split('=')[1];
-  const { data, error, mutate } = useKaKaoUser(code);
+  const { data, error } = useKaKaoUser(code);
+
   useEffect(() => {
-    if (data || error) {
-      if (data && !error) {
-        navigate('/');
-      } else if (error) {
-        navigate('/login');
-      }
+    if (data) {
+      mutate(data, false);
+      navigate('/');
     }
   }, [data]);
 

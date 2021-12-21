@@ -8,7 +8,7 @@ const Login = () => {
   const [id, setId, onIdChange] = useInput('');
   const [password, setPassword, onPasswordChange] = useInput('');
   const navigate = useNavigate();
-  const { data, error, mutate } = useUserInfo();
+  // const { data, error } = useUserInfo();
 
   const onSubmit = useCallback(
     (e) => {
@@ -26,15 +26,15 @@ const Login = () => {
     [id, password],
   );
 
-  useEffect(() => {
-    if (data || error) {
-      if (data && !error) {
-        navigate('/');
-      } else if (error) {
-        //에러 처리
-      }
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data || error) {
+  //     if (data && !error) {
+  //       navigate('/');
+  //     } else if (error) {
+  //       //에러 처리
+  //     }
+  //   }
+  // }, [data, error]);
 
   return (
     <Wrapper>
