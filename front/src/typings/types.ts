@@ -8,3 +8,13 @@ export interface IUser {
   __v: number;
   _id: string;
 }
+
+export interface IHabit {
+  title: string;
+  color: string;
+  memo?: string;
+  alarm: boolean;
+  cycle: string;
+  cycleValue: number;
+  username: string;
+}

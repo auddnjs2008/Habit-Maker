@@ -1,6 +1,8 @@
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useInput from '@hooks/useInput';
+import { useMakeHabit } from '@utils/api/habitApi';
+import { useUserInfo } from '@utils/api/userApi';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Container, FormWrapper } from './styles';
 
@@ -15,6 +17,7 @@ const HabitMaker: FC<IHabitMaker> = ({ setHabitMaker }) => {
   const [alarm, setAlarm] = useState(false);
   const [cycle, setCycle] = useState('day');
   const [cycleValue, setCycleValue] = useState(0);
+  const { data: user } = useUserInfo();
 
   const onCloseHabitMaker = useCallback(() => {
     setHabitMaker((state) => !state);
@@ -41,7 +44,18 @@ const HabitMaker: FC<IHabitMaker> = ({ setHabitMaker }) => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      console.log(title, color, memo, alarm, cycle, cycleValue);
+
+      if (title === '') {
+        alert('제목 써주세요');
+        return;
+      }
+      useMakeHabit({ title, color, memo, alarm, cycle, cycleValue, username: user.username }).then((result) => {
+        if (result.type === 'SUCCESS') {
+          onCloseHabitMaker();
+        } else {
+          //에러처리
+        }
+      });
     },
     [title, color, memo, alarm, cycle, cycleValue],
   );

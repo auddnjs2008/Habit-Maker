@@ -1,3 +1,4 @@
+import HabitLists from '@components/HabitLists';
 import HabitMaker from '@components/HabitMaker';
 import React, { useCallback, useState } from 'react';
 import { Container, DayBox, HabitWrapper, OutUL, WeekWrapper } from './styles';
@@ -62,6 +63,7 @@ const Setting = () => {
           <button onClick={onHabitMakeClick}>습관만들기</button>
           {habitMaker ? <HabitMaker setHabitMaker={setHabitMaker}></HabitMaker> : ''}
         </header>
+        <HabitLists></HabitLists>
       </HabitWrapper>
       <WeekWrapper></WeekWrapper>
     </Container>
