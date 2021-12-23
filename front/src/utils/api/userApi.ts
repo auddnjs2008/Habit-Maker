@@ -41,7 +41,7 @@ export const signUpApi = async (
 export const useUserInfo = () => {
   const fetcher = (url: string) => axios.get(url, { withCredentials: true }).then((result) => result.data);
 
-  const { data, error, mutate } = useSWR('/api/users/session', fetcher, { shouldRetryOnError: false });
+  const { data, error, mutate } = useSWR('/api/users/session', fetcher);
 
   return { data, error, mutate };
 };

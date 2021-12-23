@@ -18,6 +18,9 @@ const Navigator: FC<{ user: IUser }> = ({ user }) => {
       if ((result as any).status === 200) navigator('/login');
     });
   }, []);
+  useEffect(() => {
+    console.log(user);
+  }, []);
 
   return (
     <Container>
