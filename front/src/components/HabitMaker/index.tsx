@@ -1,9 +1,10 @@
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useInput from '@hooks/useInput';
-import { useMakeHabit } from '@utils/api/habitApi';
+import { IHabit } from '@typings/types';
+import { useGetHabits, useMakeHabit } from '@utils/api/habitApi';
 import { useUserInfo } from '@utils/api/userApi';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { Container, FormWrapper } from './styles';
 
 interface IHabitMaker {
@@ -18,6 +19,7 @@ const HabitMaker: FC<IHabitMaker> = ({ setHabitMaker }) => {
   const [cycle, setCycle] = useState('day');
   const [cycleValue, setCycleValue] = useState(0);
   const { data: user } = useUserInfo();
+  const { data: habits, error, mutate } = useGetHabits(user?.username);
 
   const onCloseHabitMaker = useCallback(() => {
     setHabitMaker((state) => !state);
@@ -49,6 +51,12 @@ const HabitMaker: FC<IHabitMaker> = ({ setHabitMaker }) => {
         alert('제목 써주세요');
         return;
       }
+
+      mutate((prev: IHabit[]) => {
+        let newHabits = [...prev, { title, color, memo, alarm, cycle, cycleValue, username: user.username }];
+        return newHabits;
+      }, false);
+
       useMakeHabit({ title, color, memo, alarm, cycle, cycleValue, username: user.username }).then((result) => {
         if (result.type === 'SUCCESS') {
           onCloseHabitMaker();
@@ -57,7 +65,7 @@ const HabitMaker: FC<IHabitMaker> = ({ setHabitMaker }) => {
         }
       });
     },
-    [title, color, memo, alarm, cycle, cycleValue],
+    [title, color, memo, alarm, cycle, cycleValue, habits],
   );
 
   return (

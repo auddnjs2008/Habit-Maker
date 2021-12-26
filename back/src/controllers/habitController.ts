@@ -32,12 +32,26 @@ export const makeHabit = async (
 
 export const getHabit = async (req: express.Request, res: express.Response) => {
   const { username } = req.body;
-  console.log(req.body);
   try {
     const habits = await Habit.find({ username });
 
     res.send(habits);
   } catch (e) {
     res.send(`errorMessage: ${e}발생`);
+  }
+};
+
+export const deleteHabit = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const { _id, username, title } = req.body;
+  try {
+    _id
+      ? await Habit.deleteOne({ _id })
+      : await Habit.deleteOne({ username, title });
+    res.end();
+  } catch (e) {
+    res.send(`errorMessage: ${e}`);
   }
 };

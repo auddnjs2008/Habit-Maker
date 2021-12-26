@@ -13,11 +13,13 @@ export const Container = styled.div`
 
 export const HabitWrapper = styled.div`
   width: 50%;
+  min-width: 500px;
   height: 100%;
   border: 1px solid blue;
 `;
 export const WeekWrapper = styled.div`
   width: 50%;
+  min-width: 500px;
   height: 100%;
   border: 1px solid red;
 `;

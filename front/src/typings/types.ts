@@ -10,6 +10,8 @@ export interface IUser {
 }
 
 export interface IHabit {
+  _id?: string;
+  _v?: number;
   title: string;
   color: string;
   memo?: string;

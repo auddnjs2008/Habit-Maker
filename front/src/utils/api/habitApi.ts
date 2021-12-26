@@ -19,3 +19,15 @@ export const useGetHabits = (username: string) => {
 
   return { data, error, mutate };
 };
+
+export const deleteHabit = async (id: string, username: string, title: string) => {
+  try {
+    const result = await axios.delete('/api/habits/delete', {
+      data: { _id: id, username, title },
+      withCredentials: true,
+    });
+    return { type: 'SUCCESS', data: result };
+  } catch (e) {
+    return { type: 'ERROR', data: e };
+  }
+};
